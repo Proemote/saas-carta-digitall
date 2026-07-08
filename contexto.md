@@ -121,7 +121,7 @@ src/
 - **Generador IA:** conectado desde ya con API key de Anthropic (modelo `claude-opus-4-8`).
 - **Sin login por ahora** (`ADMIN_AUTH_DISABLED=true` + políticas RLS abiertas). El código de auth (login page, middleware, server actions) ya existe y se activa poniendo la var a false + creando usuario en Supabase Auth + endureciendo RLS.
 - Proyecto Supabase en **cuenta secundaria** por límite del plan free.
-- Idiomas de la carta: **ES/EN** con selector. Nombres de platos se quedan en español (nombres propios); categorías y UI traducidas.
+- Idiomas de la carta: **ES/EN/FR/DE** con selector (8 jul 2026). TODO se traduce: platos, descripciones, categorías, alérgenos y UI. Las traducciones viven en `src/lib/menu-translations.ts` (diccionario con clave = nombre en español, porque no hay acceso DDL a la BD desde Claude: el MCP de Supabase apunta a la otra cuenta). Prioridad: columna `name_en` de BD → diccionario → español. Nombres propios (vinos, marcas) no se traducen. ⚠️ Si se renombra un plato desde el panel, pierde su traducción (la clave deja de coincidir).
 
 ---
 
@@ -152,7 +152,7 @@ Nota Claude Code: la sandbox de Bash bloquea localhost → usar `dangerouslyDisa
    - URL pública: **https://las-tres-carabelas-eta.vercel.app** · Panel: `/admin`
    - Pendiente: generar **QR** con la URL pública para las mesas. Opcional: conectar repo a GitHub para deploys automáticos.
 2. Fotos de productos (columna `image_url` ya existe; UI de subida a Supabase Storage sin hacer).
-3. Traducciones EN de productos/descripciones (columnas `name_en`/`description_en` ya existen).
+3. ~~Traducciones EN de productos~~ ✅ HECHO vía diccionario en código (EN/FR/DE, ver sección 8). Opcional a futuro: migrar el diccionario a columnas de BD (`name_fr`, `name_de`…) cuando haya acceso al SQL Editor, para que sobreviva a renombrados desde el panel.
 4. Asignar alérgenos por producto desde el panel (columna `allergens text[]` existe; falta UI de edición — en la carta pública ya se renderizan si existen).
 5. Activar login (ver sección 8).
 6. Conectar chatbot a WhatsApp Business API (Meta/Twilio) — fase posterior.
