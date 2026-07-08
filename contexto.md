@@ -109,7 +109,7 @@ src/
 2. **Reservas** ✅ — vista lista + calendario mensual (date-fns), crear/editar/cancelar/eliminar, confirmar pendientes. Al crear con teléfono, vincula o crea ficha de cliente automáticamente.
 3. **Clientes** ✅ — buscador, ficha con datos editables, notas internas, historial de reservas y registro de visitas/consumo.
 4. **Carta** ✅ — CRUD de productos con los 4 tipos de precio, interruptor disponible/agotado (se refleja en la carta pública como "Agotado" tachado), reordenar categorías (flechas), crear categorías.
-5. **Chatbot** 🟡 — UI completa (FAQs CRUD, historial de conversaciones, reservas del bot). **La conexión real con WhatsApp Business API queda para una fase posterior** (decisión de Carlos). Las tablas ya soportan todo el flujo (source='chatbot').
+5. **Chatbot** ✅ — Motor de IA + Widget web (9 jul 2026). API `/api/chat` llama a Claude-haiku con system prompt dinámico. El dueño configura el system prompt (horario, contacto, política de reservas) desde el panel. Widget flotante en la carta pública (4 idiomas, persistencia de conversación). Tabla `chatbot_config` con `business_instructions`. Historial guardado en `chatbot_messages`/`chatbot_conversations`. **Falta:** conexión real con WhatsApp Business API (posterior).
 6. **Contenido ✦** ✅ — wizard 3 pasos (formato: reel/post/story/secuencia · objetivo: atraer/producto/ambiente/oferta/marca · contexto libre) → llama a `/api/generate` → Claude con system prompt que conoce la carta real → concepto + guion con planos + caption + hashtags, con botón copiar por bloque y propuestas múltiples. Guarda histórico en `content_generations`. **Probado end-to-end con la API key real ✅**.
 
 ---
@@ -161,4 +161,32 @@ Nota Claude Code: la sandbox de Bash bloquea localhost → usar `dangerouslyDisa
 
 ---
 
-*Documento de contexto para retomar el trabajo en cualquier sesión futura de Claude Code. Leer este archivo primero; el CLAUDE.md general del segundo cerebro Proemote está en `01-Proemote-Studio/proemote-landing/`.*
+## 11. Arquitectura del chatbot (9 julio 2026)
+
+**Motor:** Claude Haiku + system prompt dinámico que incluye:
+- Tabla `chatbot_config` con `business_instructions` (horario, dirección, política de reservas, etc.)
+- Carta completa desde Supabase (nombres + descripciones)
+- Instrucciones de comportamiento en 4 idiomas (ES/EN/FR/DE)
+
+**Flujo de un mensaje:**
+1. Usuario escribe en widget `ChatWidget.tsx` (client component, flotante en carta pública)
+2. POST `/api/chat` con `{message, lang, conversation_id, customer_phone}`
+3. Servidor carga `chatbotSystemPrompt(lang)` = `business_instructions` + carta + reglas
+4. Claude genera respuesta en 1-2 líneas (max_tokens: 300)
+5. Guarda usuario + bot en `chatbot_messages`, crea/actualiza `chatbot_conversations`
+6. Deja el widget con historial persistente durante la sesión
+
+**Configuración (panel):**
+- Panel → Chatbot → **Configuración**
+- Textarea de `business_instructions` (con template prerellenado)
+- Toggle "Chatbot activo" para mostrar/ocultar widget en la carta
+
+**Próximos pasos:**
+- WhatsApp Business API: conectar webhook de Meta al `/api/chat` para que los mensajes vengan de WhatsApp
+- Crear reservas desde chat (request name/date/time/party_size y guardar en `reservations` con `source='chatbot'`)
+- Traduir system prompt a EN/FR/DE (ahora solo `chatbotSystemPrompt('es')` está completo)
+- Panel para ver estadísticas del bot (msg/día, tasa de resolución manual, etc.)
+
+---
+
+*Documento de contexto para retomar el trabajo en cualquier sesión futura de Claude Code. Leer hasta la sección 11. El CLAUDE.md general de Proemote está en `01-Proemote-Studio/proemote-landing/`.*
