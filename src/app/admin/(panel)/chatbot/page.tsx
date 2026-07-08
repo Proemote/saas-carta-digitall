@@ -1,4 +1,5 @@
 import { createClient, supabaseConfigured } from "@/lib/supabase/server";
+import { getChatbotConfig } from "@/lib/chatbot";
 import SetupNotice from "@/components/admin/SetupNotice";
 import ChatbotManager from "@/components/admin/ChatbotManager";
 import type {
@@ -6,12 +7,16 @@ import type {
   ChatbotConversation,
   ChatbotMessage,
   Reservation,
+  ChatbotConfig,
 } from "@/lib/types";
 
 export default async function ChatbotPage() {
   if (!supabaseConfigured()) return <SetupNotice />;
 
-  const supabase = await createClient();
+  const [config, supabase] = await Promise.all([
+    getChatbotConfig(),
+    createClient(),
+  ]);
   const [faqsRes, convsRes, msgsRes, botResRes] = await Promise.all([
     supabase.from("chatbot_faqs").select("*").order("sort_order"),
     supabase
@@ -33,6 +38,7 @@ export default async function ChatbotPage() {
 
   return (
     <ChatbotManager
+      config={config as ChatbotConfig}
       faqs={(faqsRes.data as ChatbotFaq[]) ?? []}
       conversations={(convsRes.data as ChatbotConversation[]) ?? []}
       messages={(msgsRes.data as ChatbotMessage[]) ?? []}

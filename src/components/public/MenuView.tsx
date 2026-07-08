@@ -5,6 +5,7 @@ import type { MenuSection, Product } from "@/lib/types";
 import { dict, catName, prodName, prodDesc, LANGS, type Lang } from "@/lib/i18n";
 import { ALLERGENS, allergenLabel } from "@/lib/allergens";
 import Waves from "./Waves";
+import ChatWidget from "./ChatWidget";
 import { Ship, ArrowUp } from "lucide-react";
 
 const fmt = (n: number) =>
@@ -253,6 +254,9 @@ export default function MenuView({ sections }: { sections: MenuSection[] }) {
           Bodega Las Tres Carabelas
         </p>
       </div>
+
+      {/* Widget del chatbot */}
+      <ChatWidget lang={lang} />
     </div>
   );
 }

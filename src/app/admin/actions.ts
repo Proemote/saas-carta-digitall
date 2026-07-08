@@ -235,3 +235,31 @@ export async function deleteFaq(id: string) {
   await supabase.from("chatbot_faqs").delete().eq("id", id);
   revalidatePath("/admin/chatbot");
 }
+
+// -------- CHATBOT CONFIG --------
+export async function saveChatbotConfig(formData: FormData) {
+  const supabase = await createClient();
+  const instructions = String(formData.get("instructions"));
+  const isActive = formData.get("is_active") === "on";
+
+  const { data: existing } = await supabase
+    .from("chatbot_config")
+    .select("id")
+    .maybeSingle();
+
+  if (existing) {
+    await supabase
+      .from("chatbot_config")
+      .update({
+        business_instructions: instructions,
+        is_active: isActive,
+      })
+      .eq("id", existing.id);
+  } else {
+    await supabase.from("chatbot_config").insert({
+      business_instructions: instructions,
+      is_active: isActive,
+    });
+  }
+  revalidatePath("/admin/chatbot");
+}

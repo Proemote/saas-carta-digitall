@@ -7,7 +7,8 @@ import type {
   ChatbotMessage,
   Reservation,
 } from "@/lib/types";
-import { saveFaq, deleteFaq } from "@/app/admin/actions";
+import { saveFaq, deleteFaq, saveChatbotConfig } from "@/app/admin/actions";
+import type { ChatbotConfig } from "@/lib/chatbot";
 import {
   MessageCircle,
   HelpCircle,
@@ -25,18 +26,20 @@ const STATUS_LABEL: Record<string, { label: string; cls: string }> = {
   cancelled: { label: "Cancelada", cls: "bg-red-100 text-red-700" },
 };
 
-type Tab = "faqs" | "conversaciones" | "reservas";
+type Tab = "config" | "faqs" | "conversaciones" | "reservas";
 
 export default function ChatbotManager({
   faqs,
   conversations,
   messages,
   botReservations,
+  config,
 }: {
   faqs: ChatbotFaq[];
   conversations: ChatbotConversation[];
   messages: ChatbotMessage[];
   botReservations: Reservation[];
+  config: ChatbotConfig;
 }) {
   const [tab, setTab] = useState<Tab>("faqs");
   const [editing, setEditing] = useState<Partial<ChatbotFaq> | null>(null);
@@ -45,6 +48,7 @@ export default function ChatbotManager({
   const [pending, startTransition] = useTransition();
 
   const TABS: { id: Tab; label: string; icon: typeof HelpCircle }[] = [
+    { id: "config", label: "Configuración", icon: HelpCircle },
     { id: "faqs", label: "Preguntas frecuentes", icon: HelpCircle },
     { id: "conversaciones", label: "Conversaciones", icon: MessageCircle },
     { id: "reservas", label: "Reservas del bot", icon: CalendarCheck },
@@ -84,6 +88,48 @@ export default function ChatbotManager({
           </button>
         ))}
       </div>
+
+      {/* ===== Configuración del System Prompt ===== */}
+      {tab === "config" && (
+        <section>
+          <form action={saveChatbotConfig} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wide text-wood mb-2">
+                Instrucciones del negocio
+              </label>
+              <p className="text-xs text-wood/70 mb-2">
+                El chatbot usará esto para responder preguntas. Incluye horario, dirección, cómo se gestionan las reservas, etc.
+              </p>
+              <textarea
+                name="instructions"
+                required
+                defaultValue={config.business_instructions}
+                rows={10}
+                className="w-full rounded-lg border border-wood/25 bg-white px-3 py-2 text-sm font-mono"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="is_active"
+                name="is_active"
+                defaultChecked={config.is_active}
+                className="rounded border border-wood/25"
+              />
+              <label htmlFor="is_active" className="text-sm text-wood-dark">
+                Chatbot activo (aparece en la carta)
+              </label>
+            </div>
+            <button
+              type="submit"
+              disabled={pending}
+              className="w-full rounded-lg bg-teja hover:bg-teja-dark text-cream font-semibold py-2.5 transition-colors disabled:opacity-50"
+            >
+              {pending ? "Guardando…" : "Guardar configuración"}
+            </button>
+          </form>
+        </section>
+      )}
 
       {/* ===== FAQs ===== */}
       {tab === "faqs" && (

@@ -67,6 +67,13 @@ export interface Visit {
   notes: string | null;
 }
 
+export interface ChatbotConfig {
+  id: string;
+  business_instructions: string;
+  is_active: boolean;
+  updated_at?: string;
+}
+
 export interface ChatbotFaq {
   id: string;
   question: string;
