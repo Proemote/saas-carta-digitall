@@ -1,7 +1,7 @@
 # CONTEXTO — Carta Digital + Panel de Gestión "Bodega Las Tres Carabelas"
 
 **Última actualización:** 8 julio 2026
-**Estado:** 🟢 Funcional en local, conectado a Supabase real. Pendiente de deploy en Vercel.
+**Estado:** 🟢 EN PRODUCCIÓN — https://las-tres-carabelas-eta.vercel.app (Vercel, cuenta contactoproemote-4672, proyecto `las-tres-carabelas`). Conectado a Supabase real.
 **Ubicación del proyecto:** `CLAUDE BRAIN/03-Proemote-Tech/las-tres-carabelas/`
 
 ---
@@ -148,9 +148,9 @@ Nota Claude Code: la sandbox de Bash bloquea localhost → usar `dangerouslyDisa
 
 ## 10. Pendiente (próximos pasos)
 
-1. **Deploy en Vercel** ← siguiente paso natural
-   - `git init` + repo GitHub + importar en Vercel + pegar las 4 env vars.
-   - Generar **QR** con la URL pública para las mesas.
+1. ~~**Deploy en Vercel**~~ ✅ HECHO (8 jul 2026) — deploy directo con Vercel CLI (sin GitHub; repo git solo local). Las 4 env vars están en Vercel (Production). Para redeployar: `vercel deploy --prod --yes` desde la raíz del proyecto.
+   - URL pública: **https://las-tres-carabelas-eta.vercel.app** · Panel: `/admin`
+   - Pendiente: generar **QR** con la URL pública para las mesas. Opcional: conectar repo a GitHub para deploys automáticos.
 2. Fotos de productos (columna `image_url` ya existe; UI de subida a Supabase Storage sin hacer).
 3. Traducciones EN de productos/descripciones (columnas `name_en`/`description_en` ya existen).
 4. Asignar alérgenos por producto desde el panel (columna `allergens text[]` existe; falta UI de edición — en la carta pública ya se renderizan si existen).
