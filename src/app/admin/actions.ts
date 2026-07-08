@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { translateMenuItem, translateCategoryName } from "@/lib/translate";
 
 // ---------------- AUTH ----------------
 export async function login(formData: FormData) {
@@ -123,7 +124,7 @@ export async function saveProduct(formData: FormData) {
     return v ? Number(v.replace(",", ".")) : null;
   };
 
-  const payload = {
+  const payload: Record<string, unknown> = {
     category_id: String(formData.get("category_id")),
     name: String(formData.get("name")),
     description: (formData.get("description") as string) || null,
@@ -134,6 +135,22 @@ export async function saveProduct(formData: FormData) {
     price_unit: price_type === "per_unit" ? num("price_unit") : null,
     image_url: (formData.get("image_url") as string) || null,
   };
+
+  // Retraduce solo si el nombre o la descripción cambian (o el plato es nuevo)
+  let needsTranslation = true;
+  if (id) {
+    const { data: current } = await supabase
+      .from("products").select("name, description").eq("id", id).maybeSingle();
+    needsTranslation =
+      current?.name !== payload.name || current?.description !== payload.description;
+  }
+  if (needsTranslation) {
+    const t = await translateMenuItem(
+      payload.name as string,
+      payload.description as string | null
+    );
+    if (t) Object.assign(payload, t);
+  }
 
   if (id) {
     await supabase.from("products").update(payload).eq("id", id);
@@ -182,14 +199,15 @@ export async function saveCategory(formData: FormData) {
   const name = String(formData.get("name"));
   const slug = name.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
     .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const t = await translateCategoryName(name);
   if (id) {
-    await supabase.from("categories").update({ name }).eq("id", id);
+    await supabase.from("categories").update({ name, ...t }).eq("id", id);
   } else {
     const { data: max } = await supabase
       .from("categories").select("sort_order").is("parent_id", null)
       .order("sort_order", { ascending: false }).limit(1).maybeSingle();
     await supabase.from("categories").insert({
-      name, slug, sort_order: (max?.sort_order ?? 0) + 1,
+      name, slug, sort_order: (max?.sort_order ?? 0) + 1, ...t,
     });
   }
   revalidatePath("/admin/carta");

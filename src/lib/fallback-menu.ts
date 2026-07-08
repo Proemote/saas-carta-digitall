@@ -169,7 +169,8 @@ const prods: Prod[] = [
 
 export const FALLBACK_CATEGORIES: Category[] = cats.map(
   ([id, name, name_en, slug, parent_id, sort_order]) => ({
-    id, name, name_en, slug, parent_id, sort_order, is_active: true,
+    id, name, name_en, name_fr: null, name_de: null,
+    slug, parent_id, sort_order, is_active: true,
   })
 );
 
@@ -179,8 +180,12 @@ export const FALLBACK_PRODUCTS: Product[] = prods.map(
     category_id,
     name,
     name_en: null,
+    name_fr: null,
+    name_de: null,
     description,
     description_en: null,
+    description_fr: null,
+    description_de: null,
     image_url: null,
     price_type,
     price,

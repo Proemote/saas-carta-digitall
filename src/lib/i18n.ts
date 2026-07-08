@@ -59,25 +59,38 @@ export const dict = {
   },
 } as const;
 
-/* Prioridad: español tal cual → columna de BD (solo EN) → diccionario local → español. */
+/* Prioridad: columna de BD → diccionario local (respaldo/fallback) → español. */
 
-export function catName(c: { name: string; name_en: string | null }, lang: Lang) {
+type NameCols = {
+  name: string;
+  name_en: string | null;
+  name_fr?: string | null;
+  name_de?: string | null;
+};
+
+const dbName = (o: NameCols, lang: Exclude<Lang, "es">) =>
+  ({ en: o.name_en, fr: o.name_fr, de: o.name_de }[lang]);
+
+export function catName(c: NameCols, lang: Lang) {
   if (lang === "es") return c.name;
-  if (lang === "en" && c.name_en) return c.name_en;
-  return CATEGORY_T[c.name]?.[lang] ?? c.name;
+  return dbName(c, lang) ?? CATEGORY_T[c.name]?.[lang] ?? c.name;
 }
 
-export function prodName(p: { name: string; name_en: string | null }, lang: Lang) {
+export function prodName(p: NameCols, lang: Lang) {
   if (lang === "es") return p.name;
-  if (lang === "en" && p.name_en) return p.name_en;
-  return PRODUCT_T[p.name]?.[lang] ?? p.name;
+  return dbName(p, lang) ?? PRODUCT_T[p.name]?.[lang] ?? p.name;
 }
 
 export function prodDesc(
-  p: { description: string | null; description_en: string | null },
+  p: {
+    description: string | null;
+    description_en: string | null;
+    description_fr?: string | null;
+    description_de?: string | null;
+  },
   lang: Lang
 ) {
   if (lang === "es" || !p.description) return p.description;
-  if (lang === "en" && p.description_en) return p.description_en;
-  return DESCRIPTION_T[p.description]?.[lang] ?? p.description;
+  const db = { en: p.description_en, fr: p.description_fr, de: p.description_de }[lang];
+  return db ?? DESCRIPTION_T[p.description]?.[lang] ?? p.description;
 }

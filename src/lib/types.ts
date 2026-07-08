@@ -6,6 +6,8 @@ export interface Category {
   id: string;
   name: string;
   name_en: string | null;
+  name_fr: string | null;
+  name_de: string | null;
   slug: string;
   parent_id: string | null;
   sort_order: number;
@@ -17,8 +19,12 @@ export interface Product {
   category_id: string;
   name: string;
   name_en: string | null;
+  name_fr: string | null;
+  name_de: string | null;
   description: string | null;
   description_en: string | null;
+  description_fr: string | null;
+  description_de: string | null;
   image_url: string | null;
   price_type: PriceType;
   price: number | null;
