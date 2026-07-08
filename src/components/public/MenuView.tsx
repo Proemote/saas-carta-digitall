@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import type { MenuSection, Product } from "@/lib/types";
-import { dict, catName, prodName, prodDesc, type Lang } from "@/lib/i18n";
-import { ALLERGENS } from "@/lib/allergens";
+import { dict, catName, prodName, prodDesc, LANGS, type Lang } from "@/lib/i18n";
+import { ALLERGENS, allergenLabel } from "@/lib/allergens";
 import Waves from "./Waves";
 import { Ship, ArrowUp } from "lucide-react";
 
@@ -86,7 +86,7 @@ function ProductRow({ p, lang }: { p: Product; lang: Lang }) {
             {p.allergens.map((a) => {
               const info = ALLERGENS.find((x) => x.id === a);
               return info ? (
-                <span key={a} title={lang === "es" ? info.label_es : info.label_en}>
+                <span key={a} title={allergenLabel(info, lang)}>
                   {info.emoji}
                 </span>
               ) : null;
@@ -134,7 +134,7 @@ export default function MenuView({ sections }: { sections: MenuSection[] }) {
 
           {/* Selector de idioma */}
           <div className="absolute top-4 right-4 flex rounded-full border border-cream/25 overflow-hidden text-xs font-medium">
-            {(["es", "en"] as Lang[]).map((l) => (
+            {LANGS.map((l) => (
               <button
                 key={l}
                 onClick={() => setLang(l)}
@@ -227,7 +227,7 @@ export default function MenuView({ sections }: { sections: MenuSection[] }) {
               {ALLERGENS.map((a) => (
                 <li key={a.id} className="flex items-center gap-1 text-[10px] text-wood">
                   <span className="text-base leading-none">{a.emoji}</span>
-                  <span>{lang === "es" ? a.label_es : a.label_en}</span>
+                  <span>{allergenLabel(a, lang)}</span>
                 </li>
               ))}
             </ul>

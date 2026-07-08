@@ -1,4 +1,8 @@
-export type Lang = "es" | "en";
+import { CATEGORY_T, DESCRIPTION_T, PRODUCT_T } from "./menu-translations";
+
+export type Lang = "es" | "en" | "fr" | "de";
+
+export const LANGS: Lang[] = ["es", "en", "fr", "de"];
 
 export const dict = {
   es: {
@@ -27,19 +31,53 @@ export const dict = {
     gluten_free: "Ask about our gluten-free bread and breadsticks",
     back_to_top: "Back to top",
   },
+  fr: {
+    menu_title: "Notre Carte",
+    tapas: "Tapa",
+    platos: "Plat",
+    per_unit: "pce",
+    ask_price: "Sur demande",
+    sold_out: "Épuisé",
+    allergen_title: "Information sur les allergènes",
+    allergen_note:
+      "Conformément au règlement (UE) n° 1169/2011 concernant l'information des consommateurs sur les denrées alimentaires, les informations relatives à la présence d'allergènes dans nos produits sont disponibles sur demande. Adressez-vous à notre personnel pour plus de détails.",
+    gluten_free: "Demandez notre pain et nos picos sans gluten",
+    back_to_top: "Retour en haut",
+  },
+  de: {
+    menu_title: "Unsere Karte",
+    tapas: "Tapa",
+    platos: "Teller",
+    per_unit: "Stk",
+    ask_price: "Auf Anfrage",
+    sold_out: "Ausverkauft",
+    allergen_title: "Allergen-Informationen",
+    allergen_note:
+      "Gemäß der Verordnung (EU) Nr. 1169/2011 betreffend die Information der Verbraucher über Lebensmittel stehen Ihnen Informationen über Allergene in unseren Produkten auf Anfrage zur Verfügung. Bitte wenden Sie sich an unser Personal.",
+    gluten_free: "Fragen Sie nach unserem glutenfreien Brot und Picos",
+    back_to_top: "Nach oben",
+  },
 } as const;
 
+/* Prioridad: español tal cual → columna de BD (solo EN) → diccionario local → español. */
+
 export function catName(c: { name: string; name_en: string | null }, lang: Lang) {
-  return lang === "en" && c.name_en ? c.name_en : c.name;
+  if (lang === "es") return c.name;
+  if (lang === "en" && c.name_en) return c.name_en;
+  return CATEGORY_T[c.name]?.[lang] ?? c.name;
 }
 
 export function prodName(p: { name: string; name_en: string | null }, lang: Lang) {
-  return lang === "en" && p.name_en ? p.name_en : p.name;
+  if (lang === "es") return p.name;
+  if (lang === "en" && p.name_en) return p.name_en;
+  return PRODUCT_T[p.name]?.[lang] ?? p.name;
 }
 
 export function prodDesc(
   p: { description: string | null; description_en: string | null },
   lang: Lang
 ) {
-  return lang === "en" && p.description_en ? p.description_en : p.description;
+  if (lang === "es" || !p.description) return p.description;
+  if (lang === "en" && p.description_en) return p.description_en;
+  return DESCRIPTION_T[p.description]?.[lang] ?? p.description;
 }
