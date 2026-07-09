@@ -147,46 +147,59 @@ Nota Claude Code: la sandbox de Bash bloquea localhost → usar `dangerouslyDisa
 
 ---
 
-## 10. Pendiente (próximos pasos)
+## 10. Sistema de Operaciones del Chatbot (9 julio 2026)
 
-1. ~~**Deploy en Vercel**~~ ✅ HECHO (8 jul 2026) — deploy directo con Vercel CLI (sin GitHub; repo git solo local). Las 4 env vars están en Vercel (Production). Para redeployar: `vercel deploy --prod --yes` desde la raíz del proyecto.
+**Nuevas tablas (migración 0005):**
+- `tables` — mesas (nombre, capacidad, ubicación, notas, is_active)
+- `promotions` — ofertas (título, descripción, descuento, fechas de validez)
+- Extensiones: `customers` (contadores de reservas), `reservations` (table_id, attended, bot_proposed)
+
+**Lógica automática (triggers):**
+- Al crear reserva → incrementa `customers.reservations_total`
+- Al marcar attended=true → incrementa `customers.reservations_attended`
+- Al marcar attended=false → incrementa `customers.no_show_count`
+- Cálculo automático de % asistencia en queries
+
+**Chatbot inteligente (tool use):**
+- Claude Haiku con 4 herramientas (tools):
+  1. `check_table_availability(date, time, party_size)` → mesas libres
+  2. `get_active_promotions()` → ofertas activas
+  3. `get_customer_info(phone)` → ficha de cliente (historial, %)
+  4. `propose_reservation(...)` → propone reserva (bot_proposed=true, status=pending)
+- El bot decide cuándo usar cada herramienta; el dueño confirma desde el panel
+
+**Panel:**
+- Nuevo módulo "Mesas" (CRUD): crear/editar/eliminar mesas, activar/desactivar
+- Nuevo módulo "Promociones" (CRUD): crear ofertas con fechas de validez, activar/desactivar
+- Reservas: columna "Asistencia" (Pendiente/Asistió/No vino) — **próximo: crear UI**
+- Clientes: ficha de cliente — **próximo: mostrar stats (X reservas, Y asistidas, Z%)**
+
+## 12. Pendiente (próximos pasos)
+
+1. ~~**Deploy en Vercel**~~ ✅ HECHO (8 jul 2026).
    - URL pública: **https://las-tres-carabelas-eta.vercel.app** · Panel: `/admin`
-   - Pendiente: generar **QR** con la URL pública para las mesas. Opcional: conectar repo a GitHub para deploys automáticos.
-2. Fotos de productos (columna `image_url` ya existe; UI de subida a Supabase Storage sin hacer).
-3. ~~Traducciones EN de productos~~ ✅ HECHO vía diccionario en código (EN/FR/DE, ver sección 8). Opcional a futuro: migrar el diccionario a columnas de BD (`name_fr`, `name_de`…) cuando haya acceso al SQL Editor, para que sobreviva a renombrados desde el panel.
-4. Asignar alérgenos por producto desde el panel (columna `allergens text[]` existe; falta UI de edición — en la carta pública ya se renderizan si existen).
-5. Activar login (ver sección 8).
-6. Conectar chatbot a WhatsApp Business API (Meta/Twilio) — fase posterior.
-7. Considerar migrar el proyecto Supabase a la cuenta principal cuando haya hueco/plan.
+   
+2. **Completar UI de reservas y clientes:**
+   - Reservas: agregar columna "Asistencia" (dropdown Pendiente/Asistió/No vino) → llama `setReservationAttendance`
+   - Clientes: en la ficha, mostrar "X reservas, Y asistidas (Z% fidelidad)" y "No-shows: N" (en rojo si > 20%)
+
+3. Fotos de productos (columna `image_url` ya existe; UI de subida a Supabase Storage sin hacer).
+
+4. Alérgenos (columna `allergens text[]` existe; UI de edición en panel sin hacer).
+
+5. **Conectar chatbot a WhatsApp Business API** (Meta/Twilio webhook → `/api/chat`).
+
+6. **Mejorar proposición de reservas desde bot:**
+   - Capturar datos interactivamente (nombre, fecha, hora, personas)
+   - Verificar disponibilidad antes de proponer
+   - Enviar confirmación de la propuesta
+
+7. Activar login (código existe; cambiar `ADMIN_AUTH_DISABLED=false` + crear usuario en Supabase Auth + endurecer RLS).
+
+8. Generar QR con la URL pública para las mesas.
+
+9. Migrar proyecto Supabase a cuenta principal cuando haya cupo.
 
 ---
 
-## 11. Arquitectura del chatbot (9 julio 2026)
-
-**Motor:** Claude Haiku + system prompt dinámico que incluye:
-- Tabla `chatbot_config` con `business_instructions` (horario, dirección, política de reservas, etc.)
-- Carta completa desde Supabase (nombres + descripciones)
-- Instrucciones de comportamiento en 4 idiomas (ES/EN/FR/DE)
-
-**Flujo de un mensaje:**
-1. Usuario escribe en widget `ChatWidget.tsx` (client component, flotante en carta pública)
-2. POST `/api/chat` con `{message, lang, conversation_id, customer_phone}`
-3. Servidor carga `chatbotSystemPrompt(lang)` = `business_instructions` + carta + reglas
-4. Claude genera respuesta en 1-2 líneas (max_tokens: 300)
-5. Guarda usuario + bot en `chatbot_messages`, crea/actualiza `chatbot_conversations`
-6. Deja el widget con historial persistente durante la sesión
-
-**Configuración (panel):**
-- Panel → Chatbot → **Configuración**
-- Textarea de `business_instructions` (con template prerellenado)
-- Toggle "Chatbot activo" para mostrar/ocultar widget en la carta
-
-**Próximos pasos:**
-- WhatsApp Business API: conectar webhook de Meta al `/api/chat` para que los mensajes vengan de WhatsApp
-- Crear reservas desde chat (request name/date/time/party_size y guardar en `reservations` con `source='chatbot'`)
-- Traduir system prompt a EN/FR/DE (ahora solo `chatbotSystemPrompt('es')` está completo)
-- Panel para ver estadísticas del bot (msg/día, tasa de resolución manual, etc.)
-
----
-
-*Documento de contexto para retomar el trabajo en cualquier sesión futura de Claude Code. Leer hasta la sección 11. El CLAUDE.md general de Proemote está en `01-Proemote-Studio/proemote-landing/`.*
+*Documento de contexto para retomar el trabajo en cualquier sesión futura de Claude Code. Leer hasta la sección 12. El CLAUDE.md general de Proemote está en `01-Proemote-Studio/proemote-landing/`.*
