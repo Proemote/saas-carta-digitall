@@ -263,3 +263,81 @@ export async function saveChatbotConfig(formData: FormData) {
   }
   revalidatePath("/admin/chatbot");
 }
+
+// -------- MESAS --------
+export async function saveTable(formData: FormData) {
+  const supabase = await createClient();
+  const id = formData.get("id") as string | null;
+  const payload = {
+    name: String(formData.get("name")),
+    capacity: Number(formData.get("capacity")),
+    location: (formData.get("location") as string) || null,
+    notes: (formData.get("notes") as string) || null,
+  };
+
+  if (id) {
+    await supabase.from("tables").update(payload).eq("id", id);
+  } else {
+    await supabase.from("tables").insert(payload);
+  }
+  revalidatePath("/admin/mesas");
+}
+
+export async function deleteTable(id: string) {
+  const supabase = await createClient();
+  await supabase.from("tables").delete().eq("id", id);
+  revalidatePath("/admin/mesas");
+}
+
+export async function toggleTableActive(id: string, active: boolean) {
+  const supabase = await createClient();
+  await supabase.from("tables").update({ is_active: active }).eq("id", id);
+  revalidatePath("/admin/mesas");
+}
+
+// -------- PROMOCIONES --------
+export async function savePromotion(formData: FormData) {
+  const supabase = await createClient();
+  const id = formData.get("id") as string | null;
+  const payload = {
+    title: String(formData.get("title")),
+    description: (formData.get("description") as string) || null,
+    discount_text: (formData.get("discount_text") as string) || null,
+    discount_percentage: formData.get("discount_percentage")
+      ? Number(formData.get("discount_percentage"))
+      : null,
+    valid_from: (formData.get("valid_from") as string) || null,
+    valid_until: (formData.get("valid_until") as string) || null,
+    is_active: formData.get("is_active") === "on",
+  };
+
+  if (id) {
+    await supabase.from("promotions").update(payload).eq("id", id);
+  } else {
+    await supabase.from("promotions").insert(payload);
+  }
+  revalidatePath("/admin/promociones");
+}
+
+export async function deletePromotion(id: string) {
+  const supabase = await createClient();
+  await supabase.from("promotions").delete().eq("id", id);
+  revalidatePath("/admin/promociones");
+}
+
+export async function togglePromotionActive(id: string, active: boolean) {
+  const supabase = await createClient();
+  await supabase.from("promotions").update({ is_active: active }).eq("id", id);
+  revalidatePath("/admin/promociones");
+}
+
+// -------- RESERVAS: Marcar asistencia --------
+export async function setReservationAttendance(
+  id: string,
+  attended: boolean | null
+) {
+  const supabase = await createClient();
+  await supabase.from("reservations").update({ attended }).eq("id", id);
+  revalidatePath("/admin/reservas");
+  revalidatePath("/admin");
+}

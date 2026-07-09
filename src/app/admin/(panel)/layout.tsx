@@ -8,6 +8,8 @@ import {
   Sparkles,
   LogOut,
   Ship,
+  Table2,
+  Zap,
 } from "lucide-react";
 import { logout } from "../actions";
 
@@ -16,6 +18,8 @@ const NAV = [
   { href: "/admin/reservas", label: "Reservas", icon: CalendarDays },
   { href: "/admin/clientes", label: "Clientes", icon: Users },
   { href: "/admin/carta", label: "Carta", icon: UtensilsCrossed },
+  { href: "/admin/mesas", label: "Mesas", icon: Table2 },
+  { href: "/admin/promociones", label: "Promociones", icon: Zap },
   { href: "/admin/chatbot", label: "Chatbot", icon: MessageCircle },
   { href: "/admin/contenido", label: "Contenido ✦", icon: Sparkles },
 ];

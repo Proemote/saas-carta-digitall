@@ -43,7 +43,34 @@ export interface Customer {
   email: string | null;
   notes: string | null;
   source: RecordSource;
+  reservations_total: number;
+  reservations_attended: number;
+  no_show_count: number;
   created_at: string;
+}
+
+export interface RestaurantTable {
+  id: string;
+  name: string;
+  capacity: number;
+  location: string | null;
+  notes: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Promotion {
+  id: string;
+  title: string;
+  description: string | null;
+  discount_text: string | null;
+  discount_percentage: number | null;
+  valid_from: string | null;
+  valid_until: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Reservation {
@@ -53,7 +80,10 @@ export interface Reservation {
   date: string; // YYYY-MM-DD
   time: string; // HH:MM:SS
   party_size: number;
+  table_id: string | null;
   status: ReservationStatus;
+  attended: boolean | null;
+  bot_proposed: boolean;
   notes: string | null;
   source: RecordSource;
   created_at: string;
