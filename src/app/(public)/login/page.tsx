@@ -1,5 +1,4 @@
 import { signIn } from "../actions";
-import { Ship } from "lucide-react";
 
 export const metadata = {
   title: "Sign In — Carta Digital",
@@ -19,41 +18,42 @@ export default async function LoginPage({
   const error = params.error ? errorMessages[params.error] || params.error : null;
 
   return (
-    <div className="min-h-dvh bg-blue-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white text-xl font-bold">CD</span>
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900">Carta Digital</h1>
-          <p className="text-gray-600 text-sm mt-2">Digital menus for restaurants</p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6 space-y-4">
-          {error && (
-            <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-              {error}
+    <div className="min-h-screen flex">
+      {/* Left Side - Form */}
+      <div className="w-full lg:w-1/2 bg-wood-dark flex flex-col justify-center px-6 sm:px-12 py-12">
+        <div className="max-w-md w-full mx-auto">
+          <div className="mb-12">
+            <h1 className="text-4xl sm:text-5xl font-bold text-cream mb-4">
+              Welcome
+            </h1>
+            <p className="text-cream/70 text-lg">
+              Access your account and continue your journey with us
             </p>
-          )}
+          </div>
 
-          <form action={signIn} className="space-y-4">
+          <form action={signIn} className="space-y-6">
+            {error && (
+              <p className="text-sm text-teja bg-teja/10 border border-teja/30 rounded-lg px-4 py-3">
+                {error}
+              </p>
+            )}
+
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Email
+              <label className="block text-sm font-semibold text-cream mb-2">
+                Email Address
               </label>
               <input
                 type="email"
                 name="email"
                 required
                 autoComplete="email"
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your email address"
+                className="w-full rounded-xl border border-cream/20 bg-cream/10 px-4 py-3 text-cream placeholder:text-cream/50 focus:outline-none focus:ring-2 focus:ring-teja focus:border-transparent transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-cream mb-2">
                 Password
               </label>
               <input
@@ -61,35 +61,60 @@ export default async function LoginPage({
                 name="password"
                 required
                 autoComplete="current-password"
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your password"
+                className="w-full rounded-xl border border-cream/20 bg-cream/10 px-4 py-3 text-cream placeholder:text-cream/50 focus:outline-none focus:ring-2 focus:ring-teja focus:border-transparent transition-all"
               />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="remember"
+                  className="w-4 h-4 rounded border-cream/20 bg-cream/10 accent-teja"
+                />
+                <span className="text-sm text-cream/70">Keep me signed in</span>
+              </label>
+              <a href="#" className="text-sm text-teja hover:text-teja-dark transition">
+                Reset password
+              </a>
             </div>
 
             <button
               type="submit"
-              className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 transition-colors"
+              className="w-full bg-cream hover:bg-parchment text-wood-dark font-semibold py-3 px-4 rounded-xl transition-colors"
             >
               Sign In
             </button>
           </form>
 
-          <div className="relative my-4">
+          <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
+              <div className="w-full border-t border-cream/20"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-600">Don't have an account?</span>
+              <span className="px-2 bg-wood-dark text-cream/70">Or continue with</span>
             </div>
           </div>
 
-          <a
-            href="/register"
-            className="block text-center text-blue-600 hover:text-blue-700 font-medium"
-          >
-            Create an account
-          </a>
+          <button className="w-full border border-cream/20 hover:border-cream/40 text-cream font-medium py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2">
+            <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+            </svg>
+            Continue with Google
+          </button>
+
+          <div className="mt-8 text-center text-sm text-cream/70">
+            New to our platform?{' '}
+            <a href="/register" className="text-teja hover:text-teja-dark font-medium transition">
+              Create Account
+            </a>
+          </div>
         </div>
       </div>
+
+      {/* Right Side - Gradient */}
+      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-purple-300 via-purple-500 to-purple-900"></div>
     </div>
   );
 }

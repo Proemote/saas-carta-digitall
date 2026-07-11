@@ -26,28 +26,28 @@ export default async function OnboardingPage({
   const error = params.error ? errorMessages[params.error] || params.error : null;
 
   return (
-    <div className="min-h-dvh bg-blue-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white text-xl font-bold">CD</span>
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900">Set Up Workspace</h1>
-          <p className="text-gray-600 text-sm mt-2">Create your first restaurant space</p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow p-6 space-y-4">
-          {error && (
-            <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-              {error}
+    <div className="min-h-screen flex">
+      {/* Left Side - Form */}
+      <div className="w-full lg:w-1/2 bg-wood-dark flex flex-col justify-center px-6 sm:px-12 py-12">
+        <div className="max-w-md w-full mx-auto">
+          <div className="mb-12">
+            <h1 className="text-4xl sm:text-5xl font-bold text-cream mb-4">
+              Set Up Workspace
+            </h1>
+            <p className="text-cream/70 text-lg">
+              Give your restaurant a name and start managing your digital menu
             </p>
-          )}
+          </div>
 
-          <form action={createOrganization} className="space-y-4">
+          <form action={createOrganization} className="space-y-6">
+            {error && (
+              <p className="text-sm text-teja bg-teja/10 border border-teja/30 rounded-lg px-4 py-3">
+                {error}
+              </p>
+            )}
+
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-cream mb-2">
                 Restaurant/Business Name
               </label>
               <input
@@ -55,16 +55,16 @@ export default async function OnboardingPage({
                 name="name"
                 required
                 placeholder="e.g., El Restaurante"
-                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-xl border border-cream/20 bg-cream/10 px-4 py-3 text-cream placeholder:text-cream/50 focus:outline-none focus:ring-2 focus:ring-teja focus:border-transparent transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">
+              <label className="block text-sm font-semibold text-cream mb-2">
                 Workspace URL Slug
               </label>
-              <div className="flex items-center rounded-lg border border-gray-300 overflow-hidden">
-                <span className="px-3 py-2.5 bg-gray-50 text-gray-600 text-sm whitespace-nowrap">
+              <div className="flex items-center rounded-xl border border-cream/20 bg-cream/5 overflow-hidden">
+                <span className="px-4 py-3 bg-cream/10 text-cream/70 text-sm whitespace-nowrap">
                   carta-digital.es/menu/
                 </span>
                 <input
@@ -73,25 +73,28 @@ export default async function OnboardingPage({
                   required
                   placeholder="restaurant-name"
                   pattern="[a-z0-9-]+"
-                  className="flex-1 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 border-0"
+                  className="flex-1 px-4 py-3 bg-transparent text-cream placeholder:text-cream/50 focus:outline-none border-0"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Use lowercase letters, numbers, and hyphens only</p>
+              <p className="text-xs text-cream/50 mt-2">Use lowercase letters, numbers, and hyphens only</p>
             </div>
 
             <button
               type="submit"
-              className="w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 transition-colors"
+              className="w-full bg-cream hover:bg-parchment text-wood-dark font-semibold py-3 px-4 rounded-xl transition-colors"
             >
               Create Workspace
             </button>
           </form>
 
-          <p className="text-xs text-gray-500 text-center">
+          <p className="text-xs text-cream/50 text-center mt-8">
             7 days free trial. No credit card required.
           </p>
         </div>
       </div>
+
+      {/* Right Side - Gradient */}
+      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-purple-300 via-purple-500 to-purple-900"></div>
     </div>
   );
 }
