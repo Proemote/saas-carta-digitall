@@ -19,7 +19,7 @@ export default async function LoginPage({
             Accede a tu cuenta y continúa tu gestión con nosotros
           </p>
 
-          <form action={login} className="space-y-6">
+          <form action={login} className="space-y-6" method="POST">
             {params.error && (
               <div className="bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-red-700 text-sm">
                 Email o contraseña incorrectos. Inténtalo de nuevo.
