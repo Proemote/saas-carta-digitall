@@ -40,6 +40,11 @@ body {
   scrollbar-width: none;
 }
 
+/* Hover de navegación admin con color dinámico por organización */
+.nav-hover:hover {
+  background-color: var(--hover-bg) !important;
+}
+
 /* Textura sutil tipo papel */
 .paper-texture {
   background-image: radial-gradient(

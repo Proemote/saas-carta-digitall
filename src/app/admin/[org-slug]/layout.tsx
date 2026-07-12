@@ -106,16 +106,11 @@ export default async function AdminLayout({
             <Link
               key={href}
               href={`/admin/${orgSlug}/${href}`}
-              className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors"
+              className="nav-hover flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors"
               style={{
                 color: "inherit",
                 backgroundColor: "transparent",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = `${secondaryColor}40`;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "transparent";
+                ["--hover-bg" as string]: `${secondaryColor}40`,
               }}
             >
               <Icon className="w-4.5 h-4.5" strokeWidth={1.75} />
@@ -136,16 +131,11 @@ export default async function AdminLayout({
           </Link>
           <form action={logout}>
             <button
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors"
+              className="nav-hover flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors"
               style={{
                 color: "inherit",
                 backgroundColor: "transparent",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#DC2626";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "transparent";
+                ["--hover-bg" as string]: "#DC2626",
               }}
             >
               <LogOut className="w-4 h-4" /> Salir
