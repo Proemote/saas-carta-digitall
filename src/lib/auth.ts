@@ -63,11 +63,11 @@ export async function getUserOrganizations(): Promise<CurrentOrg[]> {
           slug,
           logo_url,
           primary_color,
-          secondary_color
-        ),
-        subscriptions (
-          plan,
-          status
+          secondary_color,
+          subscriptions (
+            plan,
+            status
+          )
         )
       `
       )
@@ -76,7 +76,7 @@ export async function getUserOrganizations(): Promise<CurrentOrg[]> {
     if (error) throw error;
 
     return (data || [])
-      .filter((item) => item.organizations && item.subscriptions)
+      .filter((item) => item.organizations)
       .map((item: any) => ({
         id: item.organizations.id,
         name: item.organizations.name,
@@ -85,8 +85,8 @@ export async function getUserOrganizations(): Promise<CurrentOrg[]> {
         primary_color: item.organizations.primary_color,
         secondary_color: item.organizations.secondary_color,
         role: item.role,
-        plan: item.subscriptions[0]?.plan || "basic",
-        subscription_status: item.subscriptions[0]?.status || "trial",
+        plan: item.organizations.subscriptions[0]?.plan || "basic",
+        subscription_status: item.organizations.subscriptions[0]?.status || "trial",
       }));
   } catch (error) {
     console.error("Error getting user organizations:", error);
