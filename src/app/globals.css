@@ -1,16 +1,15 @@
 @import "tailwindcss";
 
-@theme {
-  /* Paleta Las Tres Carabelas: bodega, mar y tradición */
-  --color-sand: #f2ead9;      /* beige cálido de fondo */
-  --color-cream: #faf7ef;     /* crema para tarjetas */
-  --color-parchment: #ede2cb; /* pergamino */
-  --color-wood: #6b4f3a;      /* marrón amaderado */
-  --color-wood-dark: #3a2a1e; /* madera oscura / tinta */
-  --color-ink: #241a12;       /* casi negro cálido */
-  --color-teja: #a03d2a;      /* rojo teja de las velas */
+@layer theme {
+  --color-sand: #f2ead9;
+  --color-cream: #faf7ef;
+  --color-parchment: #ede2cb;
+  --color-wood: #6b4f3a;
+  --color-wood-dark: #3a2a1e;
+  --color-ink: #241a12;
+  --color-teja: #a03d2a;
   --color-teja-dark: #7e2e1f;
-  --color-gold: #c89b5f;      /* dorado envejecido */
+  --color-gold: #c89b5f;
   --color-gold-soft: #e3cfa8;
 
   --font-script: var(--font-dancing), cursive;
