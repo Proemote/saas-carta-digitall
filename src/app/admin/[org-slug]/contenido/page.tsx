@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { redirect } from "next/navigation";
 import { getUserOrganizations } from "@/lib/auth";
 import ContentGenerator from "@/components/admin/ContentGenerator";
