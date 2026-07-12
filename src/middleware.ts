@@ -11,7 +11,8 @@ export async function middleware(request: NextRequest) {
   }
 
   // Fase inicial sin login: acceso libre al panel
-  if (process.env.ADMIN_AUTH_DISABLED === "true") {
+  const authDisabled = process.env.ADMIN_AUTH_DISABLED?.toLowerCase() === "true";
+  if (authDisabled) {
     return NextResponse.next();
   }
 
