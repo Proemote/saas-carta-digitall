@@ -15,9 +15,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Bodega Las Tres Carabelas — Carta Digital",
-  description:
-    "Carta digital de Bodega Las Tres Carabelas. Cocina marinera y tradicional: tartar de atún de almadraba, chacinas, guisos caseros, carnes maduradas y carta de vinos.",
+  title: "Carta Digital SaaS",
+  description: "Plataforma SaaS de cartas digitales para restaurantes",
 };
 
 export default function RootLayout({
