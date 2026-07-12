@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { getUserOrganizations } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import ReservationsView from "@/components/admin/ReservationsView";
+import type { Reservation } from "@/lib/types";
 
 interface PageProps {
   params: Promise<{
@@ -17,5 +19,8 @@ export default async function ReservationsPage({ params }: PageProps) {
     redirect("/login");
   }
 
-  return <ReservationsView />;
+  const supabase = await createClient();
+  const { data: reservations } = await supabase.from("reservations").select("*").order("date", { ascending: false });
+
+  return <ReservationsView reservations={(reservations as Reservation[]) || []} />;
 }

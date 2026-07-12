@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { getUserOrganizations } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import PromotionsManager from "@/components/admin/PromotionsManager";
+import type { Promotion } from "@/lib/types";
 
 interface PageProps {
   params: Promise<{
@@ -17,5 +19,8 @@ export default async function PromotionsPage({ params }: PageProps) {
     redirect("/login");
   }
 
-  return <PromotionsManager />;
+  const supabase = await createClient();
+  const { data: promotions } = await supabase.from("promotions").select("*").order("created_at", { ascending: false });
+
+  return <PromotionsManager promotions={(promotions as Promotion[]) || []} />;
 }

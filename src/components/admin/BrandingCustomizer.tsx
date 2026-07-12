@@ -83,7 +83,7 @@ export default function BrandingCustomizer({
                   setFormData({ ...formData, name: e.target.value })
                 }
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2"
-                style={{ focusColor: formData.primary_color }}
+                style={{ borderColor: formData.primary_color }}
               />
             </div>
 

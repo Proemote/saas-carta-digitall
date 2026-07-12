@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { getUserOrganizations } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import TablesManager from "@/components/admin/TablesManager";
+import type { RestaurantTable } from "@/lib/types";
 
 interface PageProps {
   params: Promise<{
@@ -17,5 +19,8 @@ export default async function TablesPage({ params }: PageProps) {
     redirect("/login");
   }
 
-  return <TablesManager />;
+  const supabase = await createClient();
+  const { data: tables } = await supabase.from("tables").select("*").order("name");
+
+  return <TablesManager tables={(tables as RestaurantTable[]) || []} />;
 }

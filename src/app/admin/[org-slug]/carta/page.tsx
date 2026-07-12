@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { getUserOrganizations } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import MenuManager from "@/components/admin/MenuManager";
+import type { Category, Product } from "@/lib/types";
 
 interface PageProps {
   params: Promise<{
@@ -17,5 +19,15 @@ export default async function MenuPage({ params }: PageProps) {
     redirect("/login");
   }
 
-  return <MenuManager />;
+  const supabase = await createClient();
+
+  const [categoriesRes, productsRes] = await Promise.all([
+    supabase.from("categories").select("*").order("sort_order"),
+    supabase.from("products").select("*"),
+  ]);
+
+  const categories = (categoriesRes.data as Category[]) || [];
+  const products = (productsRes.data as Product[]) || [];
+
+  return <MenuManager categories={categories} products={products} />;
 }

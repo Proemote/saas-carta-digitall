@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { getUserOrganizations } from "@/lib/auth";
+import { createClient } from "@/lib/supabase/server";
 import CustomersView from "@/components/admin/CustomersView";
+import type { Customer } from "@/lib/types";
 
 interface PageProps {
   params: Promise<{
@@ -17,5 +19,8 @@ export default async function CustomersPage({ params }: PageProps) {
     redirect("/login");
   }
 
-  return <CustomersView />;
+  const supabase = await createClient();
+  const { data: customers } = await supabase.from("customers").select("*");
+
+  return <CustomersView customers={(customers as Customer[]) || []} />;
 }
