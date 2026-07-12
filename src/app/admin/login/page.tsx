@@ -14,10 +14,10 @@ export default async function LoginPage({
         <div className="text-center text-cream mb-8">
           <Ship className="w-10 h-10 mx-auto text-gold-soft" strokeWidth={1.25} />
           <p className="text-[11px] tracking-[0.35em] uppercase text-gold-soft mt-3">
-            Bodega
+            Carta Digital
           </p>
-          <h1 className="font-script text-4xl">Las Tres Carabelas</h1>
-          <p className="text-cream/60 text-sm mt-2">Panel de gestión</p>
+          <h1 className="font-script text-4xl">Panel de Control</h1>
+          <p className="text-cream/60 text-sm mt-2">Accede a tu restaurante</p>
         </div>
 
         <form
